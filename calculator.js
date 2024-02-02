@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Function to calculate the result
   function calculateResult() {
-    if (operand1 !== null && operand2 !== null && operators !== null) {
+    for (operand1 !== null && operand2 !== null && operators !== null) {
       var result;
       switch (operators) {
         case '+':
@@ -66,6 +66,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
       operand1 = result;
       operand2 = null;
+      return result;
       updateDisplay(result);
     }
   }
