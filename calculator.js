@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
   function calculateResult() {
     if (operand1 !== null && operand2 !== null && operator !== null) {
       var result;
-      switch (operator) {
+      switch (operators) {
         case '+':
           result = operand1 + operand2;
           break;
