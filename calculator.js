@@ -1,128 +1,111 @@
 document.addEventListener('DOMContentLoaded', function() {
-  // Get the display element
-  const display = document.getElementById('displayValue');
-  
+  // Get the display and keys elements
+  var display = document.getElementById('displayValue');
+  var keys = document.getElementById('pad');
+
   // Initialize variables
-  let currentNumber = '0';
-  let operators = '';
-  let previousNumber = '';
-  
+  var operand1 = null;
+  var operand2 = null;
+  var operator = null;
+  var decimalPressed = false;
+
   // Function to update the display
-  function updateDisplay() {
-    display.textContent = currentNumber;
+  function updateDisplay(value) {
+    display.textContent = value;
   }
-  
-  // Function to handle number key presses
-  function handleNumberClick(number) {
-    if (currentNumber === '0') {
-      currentNumber = number;
+
+  // Function to handle number key press
+  function handleNumberKey(key) {
+    if (display.textContent === '0' || operator) {
+      display.textContent = key;
+      operator = null;
     } else {
-      currentNumber += number;
+      display.textContent += key;
     }
-    updateDisplay();
   }
-  
+
   // Function to handle decimal key press
-  function handleDecimalClick() {
-    if (!currentNumber.includes('.')) {
-      currentNumber += '.';
+  function handleDecimalKey() {
+    if (!decimalPressed) {
+      display.textContent += '.';
+      decimalPressed = true;
     }
-    updateDisplay();
   }
-  
-  // Function to handle operator key presses
-  function handleOperatorClick(operatorKey) {
-    if (operator !== '') {
-      calculate();
+
+  // Function to handle operator key press
+  function handleOperatorKey(selectedOperator) {
+    if (operand1 === null) {
+      operand1 = parseFloat(display.textContent);
+      operator = selectedOperator;
+      decimalPressed = false;
+    } else if (operand2 === null) {
+      operand2 = parseFloat(display.textContent);
+      calculateResult();
+      operator = selectedOperator;
+      decimalPressed = false;
     }
-    operator = operatorKey;
-    previousNumber = currentNumber;
-    currentNumber = '';
-    updateDisplay();
-    highlightOperatorButton(operatorKey);
   }
-  
+
   // Function to calculate the result
-  function calculate() {
-    const num1 = parseFloat(previousNumber);
-    const num2 = parseFloat(currentNumber);
-    let result;
-    
-    switch (operators) {
-      case '+':
-        result = num1 + num2;
-        break;
-      case '-':
-        result = num1 - num2;
-        break;
-      case 'x':
-        result = num1 * num2;
-        break;
-      case '/':
-        result = num1 / num2;
-        break;
-    }
-    
-    currentNumber = result.toString();
-    operators = '';
-    previousNumber = '';
-    updateDisplay();
-  }
-  
-  // Function to handle equals key press
-  function handleEqualsClick() {
-    calculate();
-    highlightOperatorButton('');
-  }
-  
-  // Function to handle clear key press
-  function handleClearClick() {
-    currentNumber = '0';
-    operator = '';
-    previousNumber = '';
-    updateDisplay();
-    highlightOperatorButton('');
-  }
-  
-  // Function to highlight the active operator button
-  function highlightOperatorButton(operatorKey) {
-    const operatorButtons = document.querySelectorAll('.operator');
-    operatorButtons.forEach(button => {
-      if (button.textContent === operatorKey) {
-        button.classList.add('active');
-      } else {
-        button.classList.remove('active');
+  function calculateResult() {
+    if (operand1 !== null && operand2 !== null && operator !== null) {
+      var result;
+      switch (operator) {
+        case '+':
+          result = operand1 + operand2;
+          break;
+        case '-':
+          result = operand1 - operand2;
+          break;
+        case 'x':
+          result = operand1 * operand2;
+          break;
+        case '/':
+          result = operand1 / operand2;
+          break;
       }
-    });
+      operand1 = result;
+      operand2 = null;
+      updateDisplay(result);
+    }
   }
-  
-  // Add event listeners to number buttons
-  const numberButtons = document.querySelectorAll('.number');
-  numberButtons.forEach(button => {
-    button.addEventListener('click', function() {
-      const number = button.textContent;
-      handleNumberClick(number);
+
+  // Function to clear the calculator
+  function clearCalculator() {
+    operand1 = null;
+    operand2 = null;
+    operator = null;
+    decimalPressed = false;
+    updateDisplay('0');
+  }
+
+  // Event listener for number keys
+  keys.addEventListener('click', function(event) {
+    var key = event.target.textContent;
+    if (!isNaN(parseFloat(key))) {
+      handleNumberKey(key);
+    } else if (key === '.') {
+      handleDecimalKey();
+    } else if (key === 'AC') {
+      clearCalculator();
+    }
+  });
+
+  // Event listener for operator keys
+  var operators = document.querySelectorAll('.operator');
+  operators.forEach(function(operator) {
+    operator.addEventListener('click', function(event) {
+      var selectedOperator = event.target.textContent;
+      handleOperatorKey(selectedOperator);
     });
   });
-  
-  // Add event listener to decimal button
-  const decimalButton = document.getElementById('decimal');
-  decimalButton.addEventListener('click', handleDecimalClick);
-  
-  // Add event listeners to operator buttons
-  const operatorButtons = document.querySelectorAll('.operator');
-  operatorButtons.forEach(button => {
-    const operatorKey = button.textContent;
-    button.addEventListener('click', function() {
-      handleOperatorClick(operatorKey);
-    });
+
+  // Event listener for equals key
+  var equalsKey = document.querySelector('.equal');
+  equalsKey.addEventListener('click', function() {
+    operand2 = parseFloat(display.textContent);
+    calculateResult();
+    operator = null;
+    decimalPressed = false;
   });
-  
-  // Add event listener to equals button
-  const equalsButton = document.getElementById('equals');
-  equalsButton.addEventListener('click', handleEqualsClick);
-  
-  // Add event listener to clear button
-  const clearButton = document.getElementById('clear');
-  clearButton.addEventListener('click', handleClearClick);
 });
