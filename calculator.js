@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Initialize variables
   let currentNumber = '0';
-  let operator = '';
+  let operators = '';
   let previousNumber = '';
   
   // Function to update the display
@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const num2 = parseFloat(currentNumber);
     let result;
     
-    switch (operator) {
+    switch (operators) {
       case '+':
         result = num1 + num2;
         break;
@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     currentNumber = result.toString();
-    operator = '';
+    operators = '';
     previousNumber = '';
     updateDisplay();
   }
