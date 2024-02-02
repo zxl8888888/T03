@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Function to calculate the result
   function calculateResult() {
-    if (operand1 !== null && operand2 !== null && operator !== null) {
+    if (operand1 !== null && operand !== null && operator2 !== null) {
       var result;
       switch (operator) {
         case '+':
