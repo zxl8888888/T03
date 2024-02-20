@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Get the display and keys elements
   var display = document.getElementById('displayValue');
   var keys = document.getElementById('pad');
+  var numbers = document.querySelectorAll('.number');
 
   // Initialize variables
   var operand1 = null;
@@ -18,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
   function handleNumberKey(key) {
     if (display.textContent === '0' || operator) {
       display.textContent = key;
-      operator = null;
+      // operator = null;
     } else {
       display.textContent += key;
     }
@@ -48,9 +49,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Function to calculate the result
   function calculateResult() {
-    if (operand1 !== null && operand2 !== null && operators !== null) {
+    if (operand1 !== null && operand2 !== null && operator !== null) {
       var result;
-      switch (operators) {
+      switch (operator) {
         case '+':
           result = operand1 + operand2;
           break;
@@ -81,9 +82,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Event listener for number keys
   keys.addEventListener('click', function(event) {
+    numbers.forEach(function(key) {
+      key.classList.remove("active")
+    });
     var key = event.target.textContent;
-    if (!isNaN(parseFloat(key))) {
+    if (!isNaN(parseFloat(key)) && key.length === 1) {
       handleNumberKey(key);
+      event.target.classList.add("active")
     } else if (key === '.') {
       handleDecimalKey();
     } else if (key === 'AC') {
@@ -96,7 +101,9 @@ document.addEventListener('DOMContentLoaded', function() {
   operators.forEach(function(operator) {
     operator.addEventListener('click', function(event) {
       var selectedOperator = event.target.textContent;
-      handleOperatorKey(selectedOperator);
+      if (selectedOperator !== '=') {
+        handleOperatorKey(selectedOperator);
+      }
     });
   });
 
@@ -104,8 +111,10 @@ document.addEventListener('DOMContentLoaded', function() {
   var equalsKey = document.querySelector('.equal');
   equalsKey.addEventListener('click', function() {
     operand2 = parseFloat(display.textContent);
+    // operator = '=';
     calculateResult();
     operator = null;
     decimalPressed = false;
   });
 });
+
