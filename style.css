@@ -53,3 +53,7 @@
       align-items: center;
       grid-row: span 4;
   }
+
+  .active {
+    background-color: #ccc;
+  }
