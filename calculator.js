@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
   var operand1 = null;
   var operand2 = null;
   var operator = null;
+  var operator1 = null;
   var decimalPressed = false;
 
   // Function to update the display
@@ -17,9 +18,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Function to handle number key press
   function handleNumberKey(key) {
-    if (display.textContent === '0' || operator) {
+    if (display.textContent === '0' || operator1) {
       display.textContent = key;
-      // operator = null;
+      operator1 = null;
     } else {
       display.textContent += key;
     }
@@ -27,13 +28,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Function to handle decimal key press
   function handleDecimalKey() {
-    if (!decimalPressed) {
+    // if (!decimalPressed) {
+    //   display.textContent += '.';
+    //   decimalPressed = true;
+    // }
+    if (display.textContent.indexOf('.') === -1) {
       display.textContent += '.';
       decimalPressed = true;
     }
   }
 
-  // Function to handle operator key press
+  // Function to handle operator key press 
   function handleOperatorKey(selectedOperator) {
     if (operand1 === null) {
       operand1 = parseFloat(display.textContent);
@@ -88,7 +93,10 @@ document.addEventListener('DOMContentLoaded', function() {
     var key = event.target.textContent;
     if (!isNaN(parseFloat(key)) && key.length === 1) {
       handleNumberKey(key);
-      event.target.classList.add("active")
+      event.target.classList.add("active");
+      if (!operand2) {
+        operand1 = parseFloat(display.textContent);
+      }
     } else if (key === '.') {
       handleDecimalKey();
     } else if (key === 'AC') {
@@ -103,6 +111,7 @@ document.addEventListener('DOMContentLoaded', function() {
       var selectedOperator = event.target.textContent;
       if (selectedOperator !== '=') {
         handleOperatorKey(selectedOperator);
+        operator1 = selectedOperator;
       }
     });
   });
@@ -111,10 +120,8 @@ document.addEventListener('DOMContentLoaded', function() {
   var equalsKey = document.querySelector('.equal');
   equalsKey.addEventListener('click', function() {
     operand2 = parseFloat(display.textContent);
-    // operator = '=';
     calculateResult();
     operator = null;
     decimalPressed = false;
   });
 });
-
