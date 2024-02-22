@@ -87,13 +87,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Event listener for number keys
   keys.addEventListener('click', function(event) {
-    numbers.forEach(function(key) {
-      key.classList.remove("active")
-    });
     var key = event.target.textContent;
     if (!isNaN(parseFloat(key)) && key.length === 1) {
       handleNumberKey(key);
-      event.target.classList.add("active");
       if (!operand2) {
         operand1 = parseFloat(display.textContent);
       }
@@ -104,6 +100,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
+
   // Event listener for operator keys
   var operators = document.querySelectorAll('.operator');
   operators.forEach(function(operator) {
@@ -113,6 +110,15 @@ document.addEventListener('DOMContentLoaded', function() {
         handleOperatorKey(selectedOperator);
         operator1 = selectedOperator;
       }
+    });
+  });
+  const allButtons = [...operators, ...document.querySelectorAll('.number')];
+  allButtons.forEach(item => {
+    item.addEventListener('click', function(event) {
+      allButtons.forEach(function(key) {
+        key.classList.remove("active")
+      });
+      event.target.classList.add("active");
     });
   });
 
