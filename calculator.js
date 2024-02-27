@@ -107,6 +107,9 @@ document.addEventListener('DOMContentLoaded', function() {
     operator.addEventListener('click', function(event) {
       var selectedOperator = event.target.textContent;
       if (selectedOperator !== '=') {
+        if (operand1) {
+          operand2 = null;
+        }
         handleOperatorKey(selectedOperator);
         operator1 = selectedOperator;
       }
