@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
   var operator = null;
   var operator1 = null;
   var decimalPressed = false;
+  let end = false
 
   // Function to update the display
   function updateDisplay(value) {
@@ -86,12 +87,26 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   // Event listener for number keys
-  keys.addEventListener('click', function(event) {
+ keys.addEventListener('click', function(event) {
+    let temp = 0
+    console.log(operand1);
+    console.log(operand2);
+    console.log(operator);
+    console.log(operator1);
     var key = event.target.textContent;
     if (!isNaN(parseFloat(key)) && key.length === 1) {
       handleNumberKey(key);
+      if(operator){
+        // operand1 = temp
+        operand2 = parseFloat(display.textContent);
+      }
       if (!operand2) {
+        // temp = operand1
         operand1 = parseFloat(display.textContent);
+      }
+      if (end) {
+        display.textContent = key;
+        operator1 = null;
       }
     } else if (key === '.') {
       handleDecimalKey();
@@ -102,9 +117,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
   // Event listener for operator keys
-  var operators = document.querySelectorAll('.operator');
+ var operators = document.querySelectorAll('.operator');
   operators.forEach(function(operator) {
     operator.addEventListener('click', function(event) {
+      console.log(operand1);
+      console.log(operand2);
+      console.log(operator);
+      console.log(operator1);
       var selectedOperator = event.target.textContent;
       if (selectedOperator !== '=') {
         if (operand1) {
@@ -132,5 +151,6 @@ document.addEventListener('DOMContentLoaded', function() {
     calculateResult();
     operator = null;
     decimalPressed = false;
+    end = true;
   });
 });
